@@ -133,15 +133,17 @@ document.getElementById("bug-done").onclick = (e) => {
       comments: comments,
       url: url,
       canvas: canvas.toDataURL(),
-      console: {
-        logs: console.logs,
-        debugs: console.debugs,
-        warns: console.warns,
-        errors: console.errors,
-      },
+      // console: {
+      //   logs: console.logs,
+      //   debugs: console.debugs,
+      //   warns: console.warns,
+      //   errors: console.errors,
+      // },
       date_created: new Date(),
       browser: detectBrowser(),
-    }
+    };
+
+    console.log("report", report);
 
     let xhr = new XMLHttpRequest();
     const serviceBaseURL = "http://localhost:5000";

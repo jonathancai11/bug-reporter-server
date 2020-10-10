@@ -10,7 +10,7 @@ const { nanoid } = require('nanoid');
 
 require('dotenv').config();
 
-const db = monk(process.env.MONGODB_URI);
+const db = monk(process.env.MONGODB_URI); // Establish DB connection
 const reports = db.get('reports');
 
 const app = express();
@@ -18,8 +18,8 @@ app.enable('trust proxy');
 
 app.use(helmet());
 app.use(morgan('common'));
-app.use(express.json());
-app.use(express.static('./public'));
+app.use(express.json({limit: '10mb'})); // Set limit for size of request
+app.use(express.static('./public')); // Serve ./public static folder
 
 // const schema = yup.object().shape({
 //   slug: yup.string().trim().matches(/^[\w\-]+$/i),
