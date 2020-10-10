@@ -15,6 +15,7 @@
 })(document, "script", "bug-reporter");
 
 // https://stackoverflow.com/questions/19846078/how-to-read-from-chromes-console-in-javascript
+// log
 console.defaultLog = console.log.bind(console);
 console.logs = [];
 console.log = function () {
@@ -47,46 +48,54 @@ console.debug = function () {
 let editButton = document.createElement("BUTTON");
 editButton.id = "bug";
 editButton.innerHTML = "bug?";
-editButton.style.position = "fixed";
-editButton.style.bottom = 0;
-editButton.style.right = "50px";
-editButton.style.padding = "10px";
+editButton.style = "position:fixed;bottom:0px;right:50px;padding:10px";
 document.body.appendChild(editButton);
 
 let annotationOverlay = document.createElement("DIV");
 annotationOverlay.id = "annotation-overlay";
-annotationOverlay.style.position = "fixed";
-annotationOverlay.style.display = "none";
-annotationOverlay.style.width = "100%";
-annotationOverlay.style.height = "100%";
-annotationOverlay.style.top = 0;
-annotationOverlay.style.bottom = 0;
-annotationOverlay.style.left = 0;
-annotationOverlay.style.right = 0;
-annotationOverlay.style.zIndex = 2;
-annotationOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+annotationOverlay.style = "position: fixed; display: none; width: 100%; height: 100%; top: 0px; bottom: 0px; right: 0px; z-index: 2; background-color: rgba(0, 0, 0, 0.5);"
 
 let doneButton = document.createElement("BUTTON");
 doneButton.id = "bug-done";
+doneButton.style = "position: absolute; padding: 10px; top: 10px; left: 10px;"
 doneButton.innerHTML = "done";
-doneButton.style.position = "absolute";
-doneButton.style.padding = "10px";
-doneButton.style.top = "10px";
-doneButton.style.left = "10px";
 
 let innerOverlay = document.createElementNS(
   "http://www.w3.org/2000/svg",
   "svg"
 );
 innerOverlay.id = "inner-overlay";
-innerOverlay.style.width = "100%";
-innerOverlay.style.height = "100%";
-innerOverlay.style.cursor = "crosshair";
+innerOverlay.style = "width: 100%; height: 100%; cursor: crosshair;"
 
 annotationOverlay.appendChild(doneButton);
 annotationOverlay.appendChild(innerOverlay);
-console.log(annotationOverlay);
 document.body.appendChild(annotationOverlay);
+
+function detectBrowser() {
+  // Opera 8.0+
+  var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+  // Firefox 1.0+
+  var isFirefox = typeof InstallTrigger !== 'undefined';
+  // Safari 3.0+ "[object HTMLElementConstructor]" 
+  var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+  // Internet Explorer 6-11
+  var isIE = /*@cc_on!@*/false || !!document.documentMode;
+  // Edge 20+
+  var isEdge = !isIE && !!window.StyleMedia;
+  // Chrome 1 - 71
+  var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  // Blink engine detection
+  var isBlink = (isChrome || isOpera) && !!window.CSS;
+  let output = {};
+  output.firefox = isFirefox;
+  output.chrome = isChrome;
+  output.safari = isSafari;
+  output.opera = isOpera;
+  output.ie = isIE;
+  output.edge = isEdge;
+  output.blink = isBlink;
+  return output;
+}
 
 function toggleOverlay() {
   let annotationOverlay = document.getElementById("annotation-overlay");
@@ -108,28 +117,41 @@ document.getElementById("bug").onclick = () => {
 document.getElementById("bug-done").onclick = (e) => {
   e.stopPropagation();
 
-  console.log(document.body);
-
   html2canvas(document.body, {
     allowTaint: true,
     useCORS: true
   }).then((canvas) => {
-    document.body.appendChild(canvas);
+    // document.body.appendChild(canvas);
 
     let innerOverlay = document.getElementById("inner-overlay");
-    let allComments = innerOverlay.getElementsByTagName("*");
+    let comments = innerOverlay.getElementsByTagName("*");
     let url = window.location.href;
 
-    // console.log("INFORMATION TO SEND TO SERVER:");
-    // console.log(canvas);
-    // console.log(allComments);
-    // console.log(url);
-    // console.log(console.logs, console.debugs, console.warns);
+    const report = {
+      comments: comments,
+      url: url,
+      canvas: canvas.toDataURL(),
+      console: {
+        logs: console.logs,
+        debugs: console.debugs,
+        warns: console.warns,
+        errors: console.errors,
+      },
+      date_created: new Date(),
+      browser: detectBrowser(),
+    }
+
+    let xhr = new XMLHttpRequest();
+    const serviceURL = "http://localhost:5000/api/v1/comment";
+    xhr.open("POST", serviceURL, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+      report: report,
+    }));
 
     removeAllChildNodes(innerOverlay);
     toggleOverlay();
   });
-  console.log("in between");
 };
 
 document.getElementById("annotation-overlay").onclick = (e) => {

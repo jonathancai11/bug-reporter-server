@@ -38,9 +38,8 @@ app.get('/t/:tag', async (req, res, next) => {
 // Creating a comment
 app.post('/api/v1/comment', async (req, res, next) => {
   try {
-    reports.insert({
-      test: "lmao"
-    })
+    let { report } = req.body;
+    reports.insert(report);
     res.json({ status: "success" });
   } catch (error) {
     res.json({ status: "failure", error: error });
