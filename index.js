@@ -23,7 +23,21 @@ const schema = yup.object().shape({
   url: yup.string().trim().url().required(),
 });
 
-app.get('/', async (req, res, next) => {
+app.get('/t/:tag', async (req, res, next) => {
+  const { tag } = req.params;
+  try {
+    res.json("ELIFJ" + tag)
+    // const url = await urls.findOne({ slug });
+    // if (url) {
+    //   return res.redirect(url.url);
+    // }
+    // return res.status(404).sendFile(notFoundPath);
+  } catch (error) {
+    // return res.status(404).sendFile(notFoundPath);
+  }
+});
+
+app.get('/asdf', async (req, res, next) => {
   res.json("hello world! testing!!!");
 });
 
