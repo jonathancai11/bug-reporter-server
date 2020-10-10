@@ -1,3 +1,4 @@
+// https://stackoverflow.com/questions/8578617/inject-a-script-tag-with-remote-src-and-wait-for-it-to-execute
 (function (d, s, id) {
   var js,
     fjs = d.getElementsByTagName(s)[0];
@@ -13,48 +14,43 @@
   fjs.parentNode.insertBefore(js, fjs);
 })(document, "script", "bug-reporter");
 
+// https://stackoverflow.com/questions/19846078/how-to-read-from-chromes-console-in-javascript
 console.defaultLog = console.log.bind(console);
 console.logs = [];
 console.log = function () {
-  // default &  console.log()
   console.defaultLog.apply(console, arguments);
-  // new & array data
   console.logs.push(Array.from(arguments));
 };
 // error
 console.defaultError = console.error.bind(console);
 console.errors = [];
 console.error = function () {
-  // default &  console.error()
   console.defaultError.apply(console, arguments);
-  // new & array data
   console.errors.push(Array.from(arguments));
 };
 // warn
 console.defaultWarn = console.warn.bind(console);
 console.warns = [];
 console.warn = function () {
-  // default &  console.warn()
   console.defaultWarn.apply(console, arguments);
-  // new & array data
   console.warns.push(Array.from(arguments));
 };
 // debug
 console.defaultDebug = console.debug.bind(console);
 console.debugs = [];
 console.debug = function () {
-  // default &  console.debug()
   console.defaultDebug.apply(console, arguments);
-  // new & array data
   console.debugs.push(Array.from(arguments));
 };
 
+// Create HTML elements to append to document body
 let editButton = document.createElement("BUTTON");
 editButton.id = "bug";
 editButton.innerHTML = "bug?";
 editButton.style.position = "fixed";
 editButton.style.bottom = 0;
-editButton.style.right = 0;
+editButton.style.right = "50px";
+editButton.style.padding = "10px";
 document.body.appendChild(editButton);
 
 let annotationOverlay = document.createElement("DIV");
@@ -74,6 +70,10 @@ let doneButton = document.createElement("BUTTON");
 doneButton.id = "bug-done";
 doneButton.innerHTML = "done";
 doneButton.style.position = "absolute";
+doneButton.style.padding = "10px";
+doneButton.style.top = "10px";
+doneButton.style.left = "10px";
+
 let innerOverlay = document.createElementNS(
   "http://www.w3.org/2000/svg",
   "svg"
