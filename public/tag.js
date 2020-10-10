@@ -126,8 +126,10 @@ document.getElementById("bug-done").onclick = (e) => {
     let innerOverlay = document.getElementById("inner-overlay");
     let comments = innerOverlay.getElementsByTagName("*");
     let url = window.location.href;
+    let { tag } = window.brep_settings;
 
     const report = {
+      tag: tag,
       comments: comments,
       url: url,
       canvas: canvas.toDataURL(),
