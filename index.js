@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 });
 
 app.get('/', async (req, res, next) => {
-  res.json("hello world!");
+  res.json("hello world! testing!!!");
 });
 
 app.use((error, req, res, next) => {
