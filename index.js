@@ -35,22 +35,32 @@ app.get('/t/:tag', async (req, res, next) => {
   }
 });
 
-// Creating a comment
-app.post('/api/v1/comment', async (req, res, next) => {
+// Creating a report
+app.post('/api/v1/report', async (req, res, next) => {
   try {
     let { report } = req.body;
-    reports.insert(report);
+    await reports.insert(report);
     res.json({ status: "success" });
   } catch (error) {
     res.json({ status: "failure", error: error });
   }
 });
 
-// Deleting all comments
-app.delete('/api/v1/comment/all', async (req, res, next) => {
+// Deleting all reports
+app.delete('/api/v1/report/all', async (req, res, next) => {
   try {
-    reports.remove({})
+    await reports.remove({})
     res.json({ status: "success" });
+  } catch (error) {
+    res.json({ status: "failure", error: error });
+  }
+});
+
+// Retrieving all reports
+app.get('/api/v1/report/all', async (req, res, next) => {
+  try {
+    let allReports = await reports.find({});
+    res.json({ status: "success", reports: allReports });
   } catch (error) {
     res.json({ status: "failure", error: error });
   }
