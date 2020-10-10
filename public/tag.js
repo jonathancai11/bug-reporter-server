@@ -142,7 +142,9 @@ document.getElementById("bug-done").onclick = (e) => {
     }
 
     let xhr = new XMLHttpRequest();
-    const serviceURL = "http://localhost:5000/api/v1/report";
+    const serviceBaseURL = "http://localhost:5000";
+    const reportEndpoint = "/api/v1/report";
+    const serviceURL = serviceBaseURL + reportEndpoint;
     xhr.open("POST", serviceURL, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({

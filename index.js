@@ -60,7 +60,7 @@ app.delete('/api/v1/report/all', async (req, res, next) => {
 app.get('/api/v1/report/all', async (req, res, next) => {
   try {
     let allReports = await reports.find({});
-    res.json({ status: "success", reports: allReports });
+    res.json({ status: "success", numReports: allReports.length, reports: allReports });
   } catch (error) {
     res.json({ status: "failure", error: error });
   }
