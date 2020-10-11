@@ -146,7 +146,7 @@ document.getElementById("bug-done").onclick = (e) => {
     console.log("report", report);
 
     let xhr = new XMLHttpRequest();
-    const serviceBaseURL = "http://localhost:5000";
+    const serviceBaseURL = "http://bug.jonathancai.com";
     const reportEndpoint = "/api/v1/report";
     const serviceURL = serviceBaseURL + reportEndpoint;
     xhr.open("POST", serviceURL, true);
