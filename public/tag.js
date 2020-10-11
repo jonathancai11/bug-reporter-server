@@ -143,8 +143,6 @@ document.getElementById("bug-done").onclick = (e) => {
       browser: detectBrowser(),
     };
 
-    console.log("report", report);
-
     let xhr = new XMLHttpRequest();
     const serviceBaseURL = "http://bug.jonathancai.com";
     const reportEndpoint = "/api/v1/report";
